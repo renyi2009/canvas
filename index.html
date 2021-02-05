@@ -19,29 +19,41 @@
         canvas.width = document.documentElement.clientWidth;
         canvas.height = document.documentElement.clientHeight;
         let ctx = canvas.getContext('2d');
-
-        let painting = false;
-
         ctx.fillStyle = "black";
         ctx.strokeStyle = 'none';
 
-        canvas.onmousedown = () => {
-            painting = true;
-        }
-        canvas.onmousemove = (e) => {
-            if (painting === true) {
+        let painting = false;
+
+        let isTouchDevice = 'ontouchstart' in document.documentElement;
+        console.log(isTouchDevice)
+        if (isTouchDevice) {
+            canvas.ontouchmove = (e) => {
                 ctx.beginPath();
-                ctx.arc(e.clientX, e.clientY, 10, 0, Math.PI * 2);
+                ctx.arc(e.touches[0].clientX, e.touches[0].clientY, 10, 0, Math.PI * 2);
                 ctx.stroke();
                 ctx.fill();
-            } else {
-                console.log("nothing")
+            }
+        } else {
+
+            canvas.onmousedown = () => {
+                painting = true;
+            }
+            canvas.onmousemove = (e) => {
+                if (painting === true) {
+                    ctx.beginPath();
+                    ctx.arc(e.clientX, e.clientY, 10, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.fill();
+                } else {
+                    console.log("nothing")
+                }
+            }
+
+            canvas.onmouseup = () => {
+                painting = false;
             }
         }
 
-        canvas.onmouseup = () => {
-            painting = false;
-        }
 
 
     </script>
